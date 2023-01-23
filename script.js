@@ -1,36 +1,129 @@
 let tileSize = 16;
 let grid = [];
-let gridX, gridY;
+let nextGrid = [];
+let gridWidth, gridHeight;
 let paused = true;
-
-// TODO: Fix gridWidth and gridHeight
 
 function setup() {
   frameRate(30);
   let canvasW = windowWidth - (windowWidth % tileSize) - tileSize;
   let canvasH = windowHeight - (windowHeight % tileSize) - tileSize;
+  gridWidth = Math.floor(canvasW / tileSize);
+  gridHeight = Math.floor(canvasH / tileSize);
   createCanvas(canvasW, canvasH);
-  for (let h = 0; h < height; h++) {
+  for (let y = 0; y < gridHeight; y++) {
     let row = [];
-    for (let w = 0; w < width; w++) {
-      row.push(0);
+    for (let x = 0; x < gridWidth; x++) {
+      row.push({
+        state: 0,
+        nextState: 0,
+      });
     }
     grid.push(row);
   }
-  gridX = grid[0].length;
-  gridY = grid.length;
 }
 
 function draw() {
+  background(220);
   if (paused) {
-    _pausedDraw();
+    _runPaused();
   } else {
-    _runningDraw();
-    _runCycle();
+    _run();
   }
 }
 
-// TODO: Refactor this into buttons for better UX
+function _runPaused() {
+  cursor("pointer");
+  stroke("#191919");
+  strokeWeight(0.1);
+  _pausedDraw();
+}
+
+function _run() {
+  cursor("auto");
+  stroke("#f9f9f9");
+  noStroke();
+  _drawCurrentGeneration();
+  _calculateNextGeneration();
+  _applyGenerationalChanges();
+}
+
+function _pausedDraw() {
+  for (let y = 0; y < gridHeight; y++) {
+    for (let x = 0; x < gridWidth; x++) {
+      if (grid[y][x].state === 0) {
+        fill("#f9f9f9");
+        if (mouseIsPressed && _mouseOverTile(x, y)) {
+          grid[y][x].state = 1;
+        }
+      } else if (grid[y][x].state === 1) {
+        fill("#000");
+      }
+      square(x * tileSize, y * tileSize, tileSize);
+    }
+  }
+}
+
+function _drawCurrentGeneration() {
+  for (let y = 0; y < gridHeight; y++) {
+    for (let x = 0; x < gridWidth; x++) {
+      if (grid[y][x].state === 0) {
+        fill("#f9f9f9");
+      } else if (grid[y][x].state === 1) {
+        fill("#000");
+      }
+      square(x * tileSize, y * tileSize, tileSize);
+    }
+  }
+}
+
+function _calculateNextGeneration() {
+  for (let y = 0; y < gridHeight; y++) {
+    for (let x = 0; x < gridWidth; x++) {
+      let liveNeighbours = _getLiveNeighbourCount(x, y);
+      if (grid[y][x].state === 1) {
+        if (liveNeighbours < 2 || liveNeighbours > 3) {
+          grid[y][x].nextState = 0;
+        } else {
+          grid[y][x].nextState = 1;
+        }
+      } else {
+        if (liveNeighbours === 3) {
+          grid[y][x].nextState = 1;
+        } else {
+          grid[y][x].nextState = 0;
+        }
+      }
+    }
+  }
+}
+
+function _applyGenerationalChanges() {
+  let futureGrid = [];
+  for (let y = 0; y < gridHeight; y++) {
+    futureGrid[y] = [];
+    for (let x = 0; x < gridWidth; x++) {
+      futureGrid[y][x] = { state: grid[y][x].nextState, nextState: 0 };
+    }
+  }
+  grid = futureGrid;
+}
+
+function _getLiveNeighbourCount(tileX, tileY) {
+  let neighbours = [
+    grid[mod(tileY - 1, gridHeight)][mod(tileX - 1, gridWidth)].state,
+    grid[mod(tileY - 1, gridHeight)][tileX].state,
+    grid[mod(tileY - 1, gridHeight)][mod(tileX + 1, gridWidth)].state,
+    grid[tileY][mod(tileX - 1, gridWidth)].state,
+    grid[tileY][mod(tileX + 1, gridWidth)].state,
+    grid[mod(tileY + 1, gridHeight)][mod(tileX - 1, gridWidth)].state,
+    grid[mod(tileY + 1, gridHeight)][tileX].state,
+    grid[mod(tileY + 1, gridHeight)][mod(tileX + 1, gridWidth)].state,
+  ];
+  let liveNeighbours = neighbours.filter((n) => n === 1);
+  return liveNeighbours;
+}
+
 function keyPressed() {
   switch (keyCode) {
     case ENTER:
@@ -42,92 +135,12 @@ function keyPressed() {
   }
 }
 
-function _pausedDraw() {
-  background(220);
-  for (let y = 0; y < gridY; y++) {
-    for (let x = 0; x < gridX; x++) {
-      stroke(0, 0, 0);
-      strokeWeight(0.1);
-      if (grid[y][x] === 0) {
-        fill(255, 255, 255);
-        if (mouseIsPressed) {
-          // fix clicking
-          if (_mouseInsideTile(y, x)) {
-            grid[y][x] = 1;
-          }
-        }
-      } else if (grid[y][x] === 1) {
-        fill(0, 0, 0);
-      }
-      square(x * tileSize, y * tileSize, tileSize);
-    }
-  }
-}
-
-function _runningDraw() {
-  background(220);
-  for (let y = 0; y < gridY; y++) {
-    for (let x = 0; x < gridX; x++) {
-      stroke(0, 0, 0);
-      strokeWeight(0.1);
-      if (grid[y][x] === 0) {
-        fill(255, 255, 255);
-      } else if (grid[y][x] === 1) {
-        fill(0, 0, 0);
-      }
-      square(x * tileSize, y * tileSize, tileSize);
-    }
-  }
-}
-
-function _runCycle() {
-  /**
-   * 1. If LIVE cell has less than 2 alive neighbors, it dies
-   * 2. If LIVE cell has 2 or 3 alive neighbors, it remains ALIVE
-   * 3. If LIVE cell has more than 3 alive neighbors, it dies
-   * 4. If DEAD cell has exactly 3 alive neighbors, it becomes alive.
-   */
-  for (let y = 0; y < gridY; y++) {
-    for (let x = 0; x < gridX; x++) {
-      //fix this function
-      let aliveCells = _getAliveNeighbours(x, y);
-      if (grid[y][x] === 0) {
-        if (aliveCells === 3) {
-          grid[y][x] = 1;
-        }
-      } else if (grid[y][x] === 1) {
-        if (aliveCells < 2) {
-          grid[y][x] = 0;
-        } else if (aliveCells > 3) {
-          grid[y][x] = 0;
-        }
-      }
-    }
-  }
-}
-
-function _getAliveNeighbours(x, y) {
-  // top row
-  const neighbours = [
-    grid[mod(x - 1, gridWidth)][mod(y - 1, gridHeight)],
-    grid[mod(x - 1, gridWidth)][mod(y, gridHeight)],
-    grid[mod(x - 1, gridWidth)][mod(y + 1, gridHeight)],
-    grid[x][mod(y - 1, gridHeight)],
-    grid[x][mod(y + 1, gridHeight)],
-    grid[mod(x + 1, gridWidth)][mod(y - 1, gridHeight)],
-    grid[mod(x + 1, gridWidth)][mod(y, gridHeight)],
-    grid[mod(x + 1, gridWidth)][mod(y + 1, gridHeight)],
-  ];
-  const aliveNeighbours = neighbours.filter((item) => item === 1);
-  return aliveNeighbours;
-}
-
-function _mouseInsideTile(x, y) {
+function _mouseOverTile(tileX, tileY) {
   return (
-    mouseX > x * tileSize &&
-    mouseX < x * tileSize + tileSize &&
-    mouseY > y * tileSize &&
-    mouseY < y * tileSize + tileSize
+    mouseX > tileX * tileSize &&
+    mouseX < tileX * tileSize + tileSize &&
+    mouseY > tileY * tileSize &&
+    mouseY < tileY * tileSize + tileSize
   );
 }
 
