@@ -34,14 +34,14 @@ function draw() {
 
 function _runPaused() {
   cursor("pointer");
-  stroke("#191919");
+  stroke("#f9f9f9"); // #191919
   strokeWeight(0.1);
   _pausedDraw();
 }
 
 function _run() {
   cursor("auto");
-  stroke("#f9f9f9");
+  stroke("#191919"); // #f9f9f9
   noStroke();
   _drawCurrentGeneration();
   _calculateNextGeneration();
@@ -52,12 +52,12 @@ function _pausedDraw() {
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
       if (grid[y][x].state === 0) {
-        fill("#f9f9f9");
+        fill("#191919");
         if (mouseIsPressed && _mouseOverTile(x, y)) {
           grid[y][x].state = 1;
         }
       } else if (grid[y][x].state === 1) {
-        fill("#000");
+        fill("#f9f9f9");
       }
       square(x * tileSize, y * tileSize, tileSize);
     }
@@ -68,9 +68,9 @@ function _drawCurrentGeneration() {
   for (let y = 0; y < gridHeight; y++) {
     for (let x = 0; x < gridWidth; x++) {
       if (grid[y][x].state === 0) {
-        fill("#f9f9f9");
+        fill("#191919");
       } else if (grid[y][x].state === 1) {
-        fill("#000");
+        fill("#f9f9f9");
       }
       square(x * tileSize, y * tileSize, tileSize);
     }
