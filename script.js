@@ -1,127 +1,36 @@
-let tileSize = 16;
-let grid = [];
-let nextGrid = [];
-let gridWidth, gridHeight;
+const cellSize = 16;
+let board = [];
 let paused = true;
+let boardHeight, boardWidth;
 
 function setup() {
-  frameRate(30);
-  let canvasW = windowWidth - (windowWidth % tileSize) - tileSize;
-  let canvasH = windowHeight - (windowHeight % tileSize) - tileSize;
-  gridWidth = Math.floor(canvasW / tileSize);
-  gridHeight = Math.floor(canvasH / tileSize);
-  createCanvas(canvasW, canvasH);
-  for (let y = 0; y < gridHeight; y++) {
-    let row = [];
-    for (let x = 0; x < gridWidth; x++) {
-      row.push({
-        state: 0,
-        nextState: 0,
-      });
-    }
-    grid.push(row);
+  frameRate(10);
+  const canvasWidth = windowWidth - (windowWidth % cellSize) - cellSize;
+  const canvasHeight = windowHeight - (windowHeight % cellSize) - cellSize;
+  boardWidth = Math.floor(canvasWidth / cellSize);
+  boardHeight = Math.floor(canvasHeight / cellSize);
+  createCanvas(canvasWidth, canvasHeight);
+  for (let h = 0; h < boardHeight; h++) {
+    board.push(new Array(boardWidth).fill(0));
   }
 }
 
 function draw() {
   background(220);
   if (paused) {
-    _runPaused();
+    cursor("pointer");
+    stroke("#f9f9f9");
+    strokeWeight(0.1);
+    _drawBoard();
+    console.log("running paused");
   } else {
-    _run();
+    cursor("auto");
+    stroke("#191919");
+    noStroke();
+    _drawBoard();
+    _prepareNextTurn();
+    console.log("running");
   }
-}
-
-function _runPaused() {
-  cursor("pointer");
-  stroke("#f9f9f9"); // #191919
-  strokeWeight(0.1);
-  _pausedDraw();
-}
-
-function _run() {
-  cursor("auto");
-  stroke("#191919"); // #f9f9f9
-  noStroke();
-  _drawCurrentGeneration();
-  _calculateNextGeneration();
-  _applyGenerationalChanges();
-}
-
-function _pausedDraw() {
-  for (let y = 0; y < gridHeight; y++) {
-    for (let x = 0; x < gridWidth; x++) {
-      if (grid[y][x].state === 0) {
-        fill("#191919");
-        if (mouseIsPressed && _mouseOverTile(x, y)) {
-          grid[y][x].state = 1;
-        }
-      } else if (grid[y][x].state === 1) {
-        fill("#f9f9f9");
-      }
-      square(x * tileSize, y * tileSize, tileSize);
-    }
-  }
-}
-
-function _drawCurrentGeneration() {
-  for (let y = 0; y < gridHeight; y++) {
-    for (let x = 0; x < gridWidth; x++) {
-      if (grid[y][x].state === 0) {
-        fill("#191919");
-      } else if (grid[y][x].state === 1) {
-        fill("#f9f9f9");
-      }
-      square(x * tileSize, y * tileSize, tileSize);
-    }
-  }
-}
-
-function _calculateNextGeneration() {
-  for (let y = 0; y < gridHeight; y++) {
-    for (let x = 0; x < gridWidth; x++) {
-      let liveNeighbours = _getLiveNeighbourCount(x, y);
-      if (grid[y][x].state === 1) {
-        if (liveNeighbours < 2 || liveNeighbours > 3) {
-          grid[y][x].nextState = 0;
-        } else {
-          grid[y][x].nextState = 1;
-        }
-      } else {
-        if (liveNeighbours === 3) {
-          grid[y][x].nextState = 1;
-        } else {
-          grid[y][x].nextState = 0;
-        }
-      }
-    }
-  }
-}
-
-function _applyGenerationalChanges() {
-  let futureGrid = [];
-  for (let y = 0; y < gridHeight; y++) {
-    futureGrid[y] = [];
-    for (let x = 0; x < gridWidth; x++) {
-      futureGrid[y][x] = { state: grid[y][x].nextState, nextState: 0 };
-    }
-  }
-  grid = futureGrid;
-}
-
-function _getLiveNeighbourCount(tileX, tileY) {
-  let neighbours = [
-    grid[mod(tileY - 1, gridHeight)][mod(tileX - 1, gridWidth)].state,
-    grid[mod(tileY - 1, gridHeight)][tileX].state,
-    grid[mod(tileY - 1, gridHeight)][mod(tileX + 1, gridWidth)].state,
-    grid[tileY][mod(tileX - 1, gridWidth)].state,
-    grid[tileY][mod(tileX + 1, gridWidth)].state,
-    grid[mod(tileY + 1, gridHeight)][mod(tileX - 1, gridWidth)].state,
-    grid[mod(tileY + 1, gridHeight)][tileX].state,
-    grid[mod(tileY + 1, gridHeight)][mod(tileX + 1, gridWidth)].state,
-  ];
-  let liveNeighbours = neighbours.filter((n) => n === 1);
-  return liveNeighbours;
 }
 
 function keyPressed() {
@@ -135,12 +44,76 @@ function keyPressed() {
   }
 }
 
-function _mouseOverTile(tileX, tileY) {
+function _drawBoard() {
+  for (let h = 0; h < boardHeight; h++) {
+    for (let w = 0; w < boardWidth; w++) {
+      if (board[h][w] === 0) {
+        fill("#191919");
+        if (mouseIsPressed && _mouseOverCell(w, h) && paused) {
+          board[h][w] = 1;
+        }
+      } else if (board[h][w] === 1) {
+        fill("#f9f9f9");
+      }
+      square(w * cellSize, h * cellSize, cellSize);
+    }
+  }
+}
+
+function _prepareNextTurn() {
+  const nextBoard = [];
+  for (let h = 0; h < boardHeight; h++) {
+    nextBoard.push(new Array(boardWidth).fill(0));
+    for (let w = 0; w < boardWidth; w++) {
+      let aliveNeighbours = 0;
+      if (board[mod(h - 1, boardHeight)][mod(w - 1, boardWidth)] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[mod(h - 1, boardHeight)][w] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[mod(h - 1, boardHeight)][mod(w + 1, boardWidth)] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[h][mod(w - 1, boardWidth)] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[h][mod(w + 1, boardWidth)] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[mod(h + 1, boardHeight)][mod(w - 1, boardWidth)] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[mod(h + 1, boardHeight)][w] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[mod(h + 1, boardHeight)][mod(w + 1, boardWidth)] === 1) {
+        aliveNeighbours += 1;
+      }
+      if (board[h][w] === 1) {
+        if (aliveNeighbours < 2 || aliveNeighbours > 3) {
+          nextBoard[h][w] = 0;
+        } else {
+          nextBoard[h][w] = 1;
+        }
+      } else {
+        if (aliveNeighbours === 3) {
+          nextBoard[h][w] = 1;
+        } else {
+          nextBoard[h][w] = 0;
+        }
+      }
+    }
+  }
+  board = nextBoard.slice();
+}
+
+function _mouseOverCell(x, y) {
   return (
-    mouseX > tileX * tileSize &&
-    mouseX < tileX * tileSize + tileSize &&
-    mouseY > tileY * tileSize &&
-    mouseY < tileY * tileSize + tileSize
+    mouseX > x * cellSize &&
+    mouseX < x * cellSize + cellSize &&
+    mouseY > y * cellSize &&
+    mouseY < y * cellSize + cellSize
   );
 }
 
