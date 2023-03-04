@@ -1,10 +1,11 @@
-const cellSize = 16;
+const cellSize = 8;
+let fps = 20;
 let board = [];
 let paused = true;
 let boardHeight, boardWidth;
 
 function setup() {
-  frameRate(10);
+  frameRate(fps);
   const canvasWidth = windowWidth - (windowWidth % cellSize) - cellSize;
   const canvasHeight = windowHeight - (windowHeight % cellSize) - cellSize;
   boardWidth = Math.floor(canvasWidth / cellSize);
