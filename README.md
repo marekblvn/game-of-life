@@ -17,4 +17,4 @@ This is a free-time project I made in 2023. The goal was to create the cellular 
 
 <br />
 <br />
-𝕄𝕒𝕣𝕖𝕜 𝔹𝕒𝕝𝕧𝕚𝕟, 2025
+Marek Balvin, 2025
