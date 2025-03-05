@@ -22,14 +22,12 @@ function draw() {
     stroke("#f9f9f9");
     strokeWeight(0.1);
     _drawBoard();
-    console.log("running paused");
   } else {
     cursor("auto");
     stroke("#191919");
     noStroke();
     _drawBoard();
     _prepareNextTurn();
-    console.log("running");
   }
 }
 
