@@ -1,10 +1,13 @@
 const cellSize = 16;
+let running_fps = 12;
+let paused_fps = 60;
 let board = [];
 let paused = true;
+let eraseMode = false;
 let boardHeight, boardWidth;
 
 function setup() {
-  frameRate(10);
+  frameRate(paused_fps);
   const canvasWidth = windowWidth - (windowWidth % cellSize) - cellSize;
   const canvasHeight = windowHeight - (windowHeight % cellSize) - cellSize;
   boardWidth = Math.floor(canvasWidth / cellSize);
@@ -18,11 +21,13 @@ function setup() {
 function draw() {
   background(220);
   if (paused) {
+    frameRate(paused_fps);
     cursor("pointer");
     stroke("#f9f9f9");
     strokeWeight(0.1);
     _drawBoard();
   } else {
+    frameRate(running_fps);
     cursor("auto");
     stroke("#191919");
     noStroke();
@@ -34,10 +39,18 @@ function draw() {
 function keyPressed() {
   switch (keyCode) {
     case ENTER:
-      paused = false;
+      paused = !paused;
       break;
-    case ESCAPE:
-      paused = true;
+    case BACKSPACE:
+      eraseMode = true;
+      break;
+  }
+}
+
+function keyReleased() {
+  switch (keyCode) {
+    case BACKSPACE:
+      eraseMode = false;
       break;
   }
 }
@@ -47,11 +60,19 @@ function _drawBoard() {
     for (let w = 0; w < boardWidth; w++) {
       if (board[h][w] === 0) {
         fill("#191919");
-        if (mouseIsPressed && _mouseOverCell(w, h) && paused) {
+        if (
+          mouseIsPressed &&
+          mouseButton === LEFT &&
+          _mouseOverCell(w, h) &&
+          paused
+        ) {
           board[h][w] = 1;
         }
       } else if (board[h][w] === 1) {
         fill("#f9f9f9");
+        if (eraseMode && _mouseOverCell(w, h) && paused) {
+          board[h][w] = 0;
+        }
       }
       square(w * cellSize, h * cellSize, cellSize);
     }
