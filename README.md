@@ -32,9 +32,9 @@ _Recently I decided to add control buttons to the simulation. Originaly it was c
 - **Pausing / resuming the simulation**
 
   You can pause or resume the simulation by pressing the `Play` button:
-  <p align="center" width="100px">
-    <img src="https://api.github.com/repos/marekblvn/game-of-life/contents/static/screenshots/play-button.png?ref=master" alt="" />
-  </p>
+  <figure align="center">
+    <img src="./static/screenshots/play-button.png" />
+  </figure>
   All other controls are disabled while the simulation is running.
   <br/>
   <br/>
@@ -48,9 +48,9 @@ _Recently I decided to add control buttons to the simulation. Originaly it was c
 - **Erasing live cells**
 
   While the simulation is paused, you can make live cells dead (erase them) by pressing the `Erase` button:
-  <p align="center" width="100px">
-    <img src="https://api.github.com/repos/marekblvn/game-of-life/contents/static/screenshots/erase-button.png?ref=master" alt="" />
-  </p>
+  <figure align="center">
+    <img src="./static/screenshots/erase-button.png" />
+  </figure>
   This will toggle the erase mode. During erase mode you can hold left mouse button while hovering over live cells, changing them to dead cells.
   The erase mode is automatically turned off when the simulation is resumed.
   <br/>
@@ -59,9 +59,9 @@ _Recently I decided to add control buttons to the simulation. Originaly it was c
 - **Inverting the cells**
 
   You can invert the cells' state by pressing the `Invert` button:
-  <p align="center" width="100px">
-    <img src="https://api.github.com/repos/marekblvn/game-of-life/contents/static/screenshots/invert-button.png?ref=master" alt="" />
-  </p>
+  <figure align="center">
+    <img src="./static/screenshots/invert-button.png" />
+  </figure>
   This will make the dead cells alive and the live cells dead.
   <br/>
   <br/>
@@ -69,9 +69,9 @@ _Recently I decided to add control buttons to the simulation. Originaly it was c
 - **Restarting the simulation**
 
   The simulation can be restarted by pressing the `New simulation` button:
-    <p align="center" width="100px">
-      <img src="https://api.github.com/repos/marekblvn/game-of-life/contents/static/screenshots/new-sim.png?ref=master" alt="" />
-    </p>
+    <figure align="center">
+    <img src="./static/screenshots/new-sim.png" />
+  </figure>
     This cleans the entire board.
   <br />
   <br />
@@ -79,9 +79,9 @@ _Recently I decided to add control buttons to the simulation. Originaly it was c
 - **Setting the FPS**
 
   You can set the visual speed of the simulation by selecting what FPS you want:
-  <p align="center" width="100px">
-    <img src="https://api.github.com/repos/marekblvn/game-of-life/contents/static/screenshots/fps-select.png?ref=master" alt="" />
-  </p>
+  <figure align="center">
+    <img src="./static/screenshots/fps-select.png" />
+  </figure>
   This change will only be effective when the simulation is running, not when it is paused. While paused, the loop runs on 60 FPS always.
   <br/>
   <br/>
