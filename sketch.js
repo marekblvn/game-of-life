@@ -124,7 +124,7 @@ function _cleanBoard() {
 function _runPaused() {
   cursor("pointer");
   stroke("#808080");
-  strokeWeight(0.1);
+  noStroke();
   _drawBoardPaused();
 }
 

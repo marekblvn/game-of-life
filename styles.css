@@ -50,7 +50,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: space-between;
   padding: 16px 0;
   row-gap: 2px;
 }
@@ -79,8 +79,18 @@ body {
   background-size: 4px 4px;
 }
 
+.btn:active {
+  border-color: #000 #fff #fff #000;
+  box-shadow: 1px 1px 0 #808080 inset, -1px -1px 0 #dbdbdb;
+}
+
 .btn > img {
   image-rendering: pixelated;
+}
+
+#run-button {
+  width: 48px;
+  height: 48px;
 }
 
 #run-button.active img {

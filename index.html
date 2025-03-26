@@ -15,6 +15,64 @@
       </div>
       <div id="controls">
         <div>
+          <div>
+            <button class="btn" id="eraser-button">
+              <img
+                src="./static/icons/erase.png"
+                alt=""
+                width="16px"
+                height="16px"
+              />
+            </button>
+            <button class="btn" id="paint-button">
+              <img
+                src="./static/icons/invert.png"
+                alt=""
+                width="16px"
+                height="16px"
+              />
+            </button>
+            <button class="btn" id="refresh-button">
+              <img
+                src="./static/icons/template_empty.png"
+                alt=""
+                width="16px"
+                height="16px"
+              />
+            </button>
+          </div>
+          <div
+            style="
+              display: flex;
+              align-items: center;
+              column-gap: 4px;
+              margin-top: 16px;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <label
+              for="fps-select"
+              style="font-size: 0.7em; font-weight: normal"
+              >FPS</label
+            >
+            <select
+              name="fps"
+              id="fps-select"
+              style="
+                font-size: 0.7em;
+                font-family: 'MS Sans Serif', sans-serif;
+                width: 48px;
+                image-rendering: pixelated;
+              "
+            >
+              <option value="4">4</option>
+              <option value="24" selected>24</option>
+              <option value="60">60</option>
+            </select>
+          </div>
+        </div>
+        <div>
           <button class="btn" id="run-button">
             <img
               src="./static/icons/run.png"
@@ -23,60 +81,6 @@
               height="16px"
             />
           </button>
-          <button class="btn" id="eraser-button">
-            <img
-              src="./static/icons/erase.png"
-              alt=""
-              width="16px"
-              height="16px"
-            />
-          </button>
-        </div>
-        <div>
-          <button class="btn" id="paint-button">
-            <img
-              src="./static/icons/invert.png"
-              alt=""
-              width="16px"
-              height="16px"
-            />
-          </button>
-          <button class="btn" id="refresh-button">
-            <img
-              src="./static/icons/template_empty.png"
-              alt=""
-              width="16px"
-              height="16px"
-            />
-          </button>
-        </div>
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            column-gap: 4px;
-            margin-top: 16px;
-            align-items: center;
-            justify-content: center;
-          "
-        >
-          <label for="fps-select" style="font-size: 0.7em; font-weight: normal"
-            >FPS</label
-          >
-          <select
-            name="fps"
-            id="fps-select"
-            style="
-              font-size: 0.7em;
-              font-family: 'MS Sans Serif', sans-serif;
-              width: 48px;
-              image-rendering: pixelated;
-            "
-          >
-            <option value="4">4</option>
-            <option value="24" selected>24</option>
-            <option value="60">60</option>
-          </select>
         </div>
       </div>
     </div>
