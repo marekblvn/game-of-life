@@ -2,21 +2,83 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
-    <script src="script.js"></script>
-    <link rel="stylesheet" href="styles.css" />
+    <link href="./styles.css" rel="stylesheet" />
+    <script src="./libraries/p5.min.js"></script>
+    <script src="./libraries/p5.sound.min.js"></script>
+    <script src="sketch.js"></script>
     <title>Conway's Game of Life</title>
   </head>
-  <body style="padding: 0; margin: 0; background-color: #131313">
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      "
-    >
-      <main></main>
+  <body>
+    <div id="main">
+      <div id="canvas-container">
+        <canvas id="canvas"></canvas>
+      </div>
+      <div id="controls">
+        <div>
+          <button class="btn" id="run-button">
+            <img
+              src="./static/icons/run.png"
+              alt=""
+              width="16px"
+              height="16px"
+            />
+          </button>
+          <button class="btn" id="eraser-button">
+            <img
+              src="./static/icons/erase.png"
+              alt=""
+              width="16px"
+              height="16px"
+            />
+          </button>
+        </div>
+        <div>
+          <button class="btn" id="paint-button">
+            <img
+              src="./static/icons/invert.png"
+              alt=""
+              width="16px"
+              height="16px"
+            />
+          </button>
+          <button class="btn" id="refresh-button">
+            <img
+              src="./static/icons/template_empty.png"
+              alt=""
+              width="16px"
+              height="16px"
+            />
+          </button>
+        </div>
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            column-gap: 4px;
+            margin-top: 16px;
+            align-items: center;
+            justify-content: center;
+          "
+        >
+          <label for="fps-select" style="font-size: 0.7em; font-weight: normal"
+            >FPS</label
+          >
+          <select
+            name="fps"
+            id="fps-select"
+            style="
+              font-size: 0.7em;
+              font-family: 'MS Sans Serif', sans-serif;
+              width: 48px;
+              image-rendering: pixelated;
+            "
+          >
+            <option value="4">4</option>
+            <option value="24" selected>24</option>
+            <option value="60">60</option>
+          </select>
+        </div>
+      </div>
     </div>
   </body>
 </html>

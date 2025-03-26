@@ -1,0 +1,122 @@
+@font-face {
+  font-family: "MS Sans Serif";
+  src: url("./static/fonts/MS_Sans_Serif.ttf");
+  font-weight: normal;
+}
+@font-face {
+  font-family: "MS Sans Serif";
+  src: url("./static/fonts/MS_Sans_Serif_Bold.ttf");
+  font-weight: bold;
+}
+
+body {
+  height: 100%;
+  background-color: #bfbfbf;
+  padding: 0;
+  margin: 0;
+  font-family: "MS Sans Serif", sans-serif;
+  font-weight: normal;
+}
+
+#main {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: auto 113px;
+  grid-template-rows: 1fr;
+  column-gap: 0px;
+  background-color: #f9f9f9;
+}
+
+#canvas-container {
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000 #fff #fff #000;
+  box-shadow: 1px 1px 0 #808080 inset, -1px -1px 0 #dbdbdb inset;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#canvas {
+  padding-top: 6px;
+  width: 100%;
+  height: calc(100% - 12px);
+  background-color: #f9f9f9;
+}
+
+#controls {
+  background-color: #c0c0c0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 16px 0;
+  row-gap: 2px;
+}
+
+.btn {
+  width: 32px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #fff #000 #000 #fff;
+  box-shadow: 1px 1px 0 #dbdbdb inset, -1px -1px 0 #808080 inset;
+  background-color: #bfbfbf;
+  padding: 4px 6px;
+  font-family: "MS Sans Serif", sans-serif;
+  font-weight: bold;
+  align-items: center;
+  image-rendering: pixelated;
+}
+
+.btn.active {
+  border-color: #000 #fff #fff #000;
+  box-shadow: 1px 1px 0 #808080 inset, -1px -1px 0 #dbdbdb;
+  background: repeating-conic-gradient(
+    #f0f0f0 0deg 90deg,
+    #dbdbdb 90deg 180deg
+  );
+  background-size: 4px 4px;
+}
+
+.btn > img {
+  image-rendering: pixelated;
+}
+
+#run-button.active img {
+  src: url("./static/icons/pause.png");
+}
+
+#fps-select {
+  border-radius: 0;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000 #fff #fff #000;
+  box-shadow: 1px 1px 0 #808080 inset, -1px -1px 0 #dbdbdb inset;
+  user-select: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none;
+  padding: 2px;
+  padding-left: 6px;
+  background-image: url("./static/icons/arrow-down.png");
+  background-repeat: no-repeat;
+  background-position: center right 6px;
+  background-size: 9px;
+  image-rendering: pixelated;
+  background-color: #f9f9f9;
+}
+
+#fps-select:focus {
+  appearance: none;
+}
+
+#fps-select:open {
+  background-image: url("./static/icons/arrow-up.png");
+}
+
+#fps-select option {
+  border-radius: 0;
+  background-color: #f9f9f9;
+}
